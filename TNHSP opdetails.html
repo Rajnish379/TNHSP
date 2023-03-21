@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=text],input[type=tel]{
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font-size:15px;
+  font-family:'Helvetica', serif;
+
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  font-size:20px;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  text-align:center;
+
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2 style="font-size:30px;text-align:center;"><b>Department & Location Mapping Form</b></h2>
+
+<div class="container">
+  <form id="form1">
+  <div class="row">
+      <div class="col-25">
+        <label for="docdept">OP</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="op" id="op" placeholder="Name of OP" autofocus required>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-25">
+        <label for="docdept">Days</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="day" id="day" placeholder="Enter No.of operating days" required>
+      </div>
+  </div>
+   <div class="row">
+      <div class="col-25">
+        <label for="docdept">Timings</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="timings" id="time" placeholder="Enter operating timings" required>
+      </div>
+  </div>
+   <div class="row">
+      <div class="col-25">
+        <label for="docdept">Ward Number</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="ward" id="wrd" placeholder="Enter Ward Number" required>
+      </div>
+  </div>
+  
+ </form>
+</div>
+<div style="text-align:center;margin:10px auto;">
+<input type="submit" onclick="Finalize(checkForm(form1))" form="form1">
+
+
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+   
+    var firebaseConfig = {
+    apiKey: "AIzaSyDQOpdB11nDqH7xmBgtmRc7NVRRHgNtpdI",
+    authDomain: "firstassistant-esmape.firebaseapp.com",
+    databaseURL: "https://firstassistant-esmape.firebaseio.com",
+    projectId: "firstassistant-esmape",
+    storageBucket: "firstassistant-esmape.appspot.com",
+    messagingSenderId: "900967599602",
+    appId: "1:900967599602:web:9a89c5dff52ccd79"
+    };
+ 
+  firebase.initializeApp(firebaseConfig);
+
+var docRef=firebase.database().ref().child("op");
+
+document.getElementById('form1').addEventListener('submit',submitForm);
+
+
+function submitForm(e){
+     var day=getInputVal('day');
+     var time=getInputVal('time');
+     var ward_number=getInputVal('wrd');
+     var op=getInputVal('op');
+     
+
+saveForm(day,time,ward_number,op);
+alert("Data inserted Successfully");
+document.getElementById('form1').reset();
+}
+
+function getInputVal(id){
+return document.getElementById(id).value;
+}
+
+
+function saveForm(day,time,ward_number,op){
+var newDocRef= docRef.child(getInputVal('op'));
+newDocRef.set({
+   day:day,
+   time:time,
+   ward_number:ward_number
+});
+
+}
+function checkForm(form)
+{
+  if((form.dep.value=="")||(form.op.value=="")){
+    return false;
+  }
+  else{
+    return true;
+  }
+}
+function Finalize(bool){
+  if(bool==true){
+    submitForm(form1);
+  }
+  else{
+    alert("Error");
+  }
+}
+
+
+
+</script>
+</div>
+
+
+</body>
+</html>

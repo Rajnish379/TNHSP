@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=text],input[type=tel]{
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font-size:15px;
+  font-family:'Helvetica', serif;
+
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  font-size:20px;
+}
+
+button[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  text-align:center;
+
+}
+
+button[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2 style="font-size:30px;text-align:center;"><b>Department Removing Form</b></h2>
+
+<div class="container">
+   <div class="row">
+      <div class="col-25">
+        <label for="docdept">Department</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="Department" id="dep" placeholder="Name of the Department" autofocus required>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-25">
+        <label for="key">Information to be removed(If left blank the whole Department's information will be deleted</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="remove" id="k" placeholder="Enter the information to be removed" required>
+      </div>
+  </div>
+  
+<div style="text-align:center;margin:10px auto;">
+<button type="submit" onclick="removeData()">Remove</button>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+</div>
+<p style="text-align:center;font-size:20px">The department to be removed must be entered exactly i.e., without case changes</p>
+
+
+
+
+<script>
+    var firebaseConfig = {
+    apiKey: "AIzaSyDQOpdB11nDqH7xmBgtmRc7NVRRHgNtpdI",
+    authDomain: "firstassistant-esmape.firebaseapp.com",
+    databaseURL: "https://firstassistant-esmape.firebaseio.com",
+    projectId: "firstassistant-esmape",
+    storageBucket: "firstassistant-esmape.appspot.com",
+    messagingSenderId: "900967599602",
+    appId: "1:900967599602:web:9a89c5dff52ccd79"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  function getInputVal(id){
+  return document.getElementById(id).value;
+}
+
+function removeData(){
+  var fb=firebase.database().ref().child("department").child(getInputVal('dep'))
+  key=document.getElementById('k').value
+  fb.child(key+'/').remove()
+  alert("Data Removed Successfully");
+}
+ 
+
+  </script>
+
+
+
+
+</body>
+</html>

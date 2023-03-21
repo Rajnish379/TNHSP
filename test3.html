@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=text],input[type=tel]{
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font-size:15px;
+  font-family:'Helvetica', serif;
+
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  font-size:20px;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  text-align:center;
+
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 15px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2 style="font-size:30px;text-align:center;"><b>Ward Number & Location Mapping Form</b></h2>
+
+<div class="container">
+  <form id="form1">
+  <div class="row">
+      <div class="col-25">
+        <label for="docward">Ward Number</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="ward" id="wrd" placeholder="Enter Ward Number" autofocus required>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-25">
+        <label for="docdept">Building</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="building" id="bldng" placeholder="Enter Building Name" required>
+      </div>
+  </div>
+   <div class="row">
+      <div class="col-25">
+        <label for="docdept">Campus</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="campus" id="cmps" placeholder="Enter name of the Campus" required>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-25">
+        <label for="docdept">Floor</label>
+      </div>
+      <div class="col-75">
+        <input type="tel" name="ward" id="flr" placeholder="Enter Floor Number" required maxlength="2">
+      </div>
+  </div>
+   <div class="row">
+      <div class="col-25">
+        <label for="docdept">Location Building</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="ward" id="locbldng" placeholder="Enter Location Building Name" required>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-25">
+        <label for="docdept">Location Room</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="ward" id="locroom" placeholder="Enter Location Room" required>
+      </div>
+  </div>
+  
+ </form>
+</div>
+<div style="text-align:center;margin:10px auto;">
+<input type="submit" onclick="Finalize(checkForm(form1))" form="form1">
+
+
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+   
+    var firebaseConfig = {
+    apiKey: "AIzaSyDQOpdB11nDqH7xmBgtmRc7NVRRHgNtpdI",
+    authDomain: "firstassistant-esmape.firebaseapp.com",
+    databaseURL: "https://firstassistant-esmape.firebaseio.com",
+    projectId: "firstassistant-esmape",
+    storageBucket: "firstassistant-esmape.appspot.com",
+    messagingSenderId: "900967599602",
+    appId: "1:900967599602:web:9a89c5dff52ccd79"
+    };
+ 
+  firebase.initializeApp(firebaseConfig);
+
+var docRef=firebase.database().ref().child("ward_location");
+
+document.getElementById('form1').addEventListener('submit',submitForm);
+
+
+function submitForm(e){
+     var loc_building=getInputVal('locbldng');
+     var loc_room=getInputVal('locroom');
+     var building_name=getInputVal('bldng');
+     var ward_number=getInputVal('wrd');
+     var campus=getInputVal('cmps');
+     var floor=getInputVal('flr');
+     
+
+saveForm(loc_building,loc_room,building_name,ward_number,campus,floor);
+alert("Data inserted Successfully");
+document.getElementById('form1').reset();
+}
+
+function getInputVal(id){
+return document.getElementById(id).value;
+}
+
+
+function saveForm(loc_building,loc_room,building_name,ward_number,campus,floor){
+var newDocRef= docRef.child(getInputVal('wrd'));
+newDocRef.set({
+   loc_building:loc_building,
+   loc_room:loc_room,
+   building_name:building_name,
+   campus:campus,
+   floor:floor
+});
+
+}
+
+function checkForm(form)
+{
+  if((form.locbldng.value=="")||(form.wrd.value=="")||(form.cmps.value=="")||(form.bldng.value=="")||(form.locroom.value=="")||(form.flr.value=="")){
+    return false;
+  }
+  else{
+    return true;
+  }
+}
+function Finalize(bool){
+  if(bool==true){
+    submitForm(form1);
+  }
+  else{
+    alert("Error");
+  }
+}
+
+
+
+
+</script>
+</div>
+
+
+</body>
+</html>
